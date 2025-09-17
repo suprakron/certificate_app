@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ลงทะเบียนรับเกียรติบัตร</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Sarabun', sans-serif;
+            scroll-behavior: smooth;
+            background: #0f1a2b;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f1a2b, #1c2a45, #2b3a5b);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.05) 0px, transparent 50px),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0px, transparent 50px),
+                linear-gradient(45deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(-45deg, rgba(54, 18, 18, 0.02) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px, 40px 40px, 40px 40px;
+            animation: movePattern 30s linear infinite;
+        }
+
+        @keyframes movePattern {
+            0% {
+                background-position: 0 0, 0 0, 0 0, 0 0;
+            }
+            100% {
+                background-position: 300px 300px, -300px -300px, 200px 200px, -200px -200px;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .hero-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .hero-container img.logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .form-check {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .form-check-label {
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .form-check input {
+            margin-right: 8px;
+            accent-color: #00c6ff;
+        }
+
+        .hero button {
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            color: #fff;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-content input {
+            padding: 12px;
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .modal-content input::placeholder {
+            color: #ddd;
+        }
+
+        .modal-content button {
+            margin-top: 15px;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .modal-content button:hover {
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+        }
+
+        /* Result Section */
+        #result {
+            display: none;
+            padding: 60px 20px;
+            text-align: center;
+            background: #f5f7fa;
+        }
+
+        #result h2 {
+            color: #203a43;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        #result p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        embed {
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            border: none;
+            margin-top: 20px;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 0.95rem;
+            }
+
+            .form-check {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hero-container {
+                padding: 20px;
+            }
+
+            .hero-container img.logo {
+                max-width: 150px;
+            }
+
+            .hero button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .hero button {
+                padding: 10px 25px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="hero">
+        <div class="hero-content">
+            <!-- Glass Container -->
+            <div class="hero-container">
+                <img src="./assets/img/logo_title.svg" alt="Logo" class="logo">
+                <p>
+                    โครงการบริการวิชาการและศึกษาดูงาน
+                    หลักสูตรวิทยาศาสตรมหาบัณฑิต สาขาวิชาการศึกษาวิทยาศาสตร์และเทคโนโลยี
+                    ภาควิชาครุศาสตร์อุตสาหกรรม คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี
+                    สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+                </p>
+            </div>
+
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" name="role" value="speaker" checked>
+                    วิทยากร
+                </label>
+                <label class="form-check-label">
+                    <input type="radio" name="role" value="participant">
+                    ผู้เข้าร่วมอบรม
+                </label>
+            </div>
+            <button onclick="openModal()">ลงทะเบียนรับเกียรติบัตร</button>
+        </div>
+    </section>
+
+    <!-- popup -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3>กรอกชื่อเพื่อสร้างเกียรติบัตร</h3>
+            <input id="name" placeholder="กรอกชื่อ-นามสกุล">
+            <button onclick="generateCert()">สร้างเกียรติบัตร</button>
+        </div>
+    </div>
+
+    <!-- result -->
+    <div id="result">
+        <h2>ยินดีด้วย! คุณผ่านการอบรมแล้ว</h2>
+        <p>นี่คือเกียรติบัตรของคุณ:</p>
+        <embed id="pdfEmbed" type="application/pdf"></embed>
+    </div>
+
+    <canvas id="canvas" width="1600" height="1130"></canvas>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+        const c = document.getElementById('canvas');
+        const ctx = c.getContext('2d');
+        const nameInput = document.getElementById('name');
+        const bgImg = new Image();
+        bgImg.src = './assets/img/format1.png'; // ตรวจสอบ path ให้ถูกต้อง
+
+        function openModal() {
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        document.getElementById('modal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.drawImage(bgImg, 0, 0, c.width, c.height);
+            ctx.fillStyle = '#000';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 64px TH Sarabun New, sans-serif';
+            ctx.fillText(nameInput.value, c.width / 2, 480);
+        }
+
+        function generateCert() {
+            if (!nameInput.value.trim()) {
+                alert('กรุณากรอกชื่อ-นามสกุล');
+                return;
+            }
+            draw();
+            const imgData = c.toDataURL('image/png');
+            const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+            const pdfBlob = pdf.output('blob');
+            const url = URL.createObjectURL(pdfBlob);
+            document.getElementById('pdfEmbed').src = url;
+            closeModal();
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+
+</html>
